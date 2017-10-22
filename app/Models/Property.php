@@ -11,7 +11,7 @@ class Property extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'address', 'postcode', 'city', 'user_id', 'thumbnail', 'description', 'price'
+        'name', 'address', 'postcode', 'city', 'user_id', 'thumbnail', 'description', 'price', 'rooms', 'living_rooms', 'bathrooms'
     ];
 
     /**
@@ -31,5 +31,9 @@ class Property extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public function favourites(){
+        return $this->hasMany('App\Models\Favourite');
     }
 }

@@ -15,6 +15,15 @@ $api->version('v1', function (Router $api) {
     });
 
     $api->group(['middleware' => 'jwt.auth'], function(Router $api) {
+        //Users
+        $api->get('users/me', 'App\\Api\\V1\\Controllers\\UsersController@getLoggedInUser');
+        $api->get('users/{id}/properties', 'App\\Api\\V1\\Controllers\\PropertiesController@getUserProperties');
+        
+        //Favourites
+        $api->get('users/{id}/favourites', 'App\\Api\\V1\\Controllers\\FavouritesController@getFavourites');
+        $api->post('users/{id}/favourites', 'App\\Api\\V1\\Controllers\\FavouritesController@addFavourite');
+        $api->delete('users/{id}/favourites', 'App\\Api\\V1\\Controllers\\FavouritesController@deleteFavourite');
+        
         //Properties
         $api->get('properties', 'App\\Api\\V1\\Controllers\\PropertiesController@getAll');
         $api->post('properties', 'App\\Api\\V1\\Controllers\\PropertiesController@createProperty');

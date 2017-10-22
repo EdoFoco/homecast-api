@@ -8,7 +8,11 @@ use App\User;
 class PropertiesRepository
 {
     public function getAll(){
-        return Property::all();
+        return Property::with('user')->get();
+    }
+
+    public function getUserProperties(User $user){
+        return Property::with('user')->where('user_id', '=', $user->id)->get();
     }
 
     public function getById($id){

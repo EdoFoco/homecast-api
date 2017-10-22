@@ -61,6 +61,11 @@ $app->bind('RoomsRepository', function($app)
     return new RoomsRepository();
 });
 
+/*$app->bind('FavouritesRepository', function($app)
+{
+    return new FavouritesRepository();
+});*/
+
 
 /*
 |--------------------------------------------------------------------------

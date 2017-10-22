@@ -39,13 +39,22 @@ return [
             'postcode' => 'required',
             'city' => 'required',
             'price' => 'required | between:0,999999.99',
-            'description' => 'required'
+            'description' => 'required',
+            'rooms' => 'required | integer',
+            'bathrooms' => 'required | integer',
+            'living_rooms' => 'required | integer'
         ]
     ],
 
     'viewing' => [
         'validation_rules' => [
             'date_time' => 'required | date'
+        ]
+    ],
+
+    'favourite' => [
+        'validation_rules' => [
+            'property_id' => 'required | integer'
         ]
     ]
 

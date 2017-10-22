@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePropertyTable extends Migration
+class CreateFavouritesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,17 @@ class CreatePropertyTable extends Migration
      */
     public function up()
     {
-        Schema::create('properties', function (Blueprint $table) {
+        Schema::create('favourites', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('name');
-            $table->string('address');
-            $table->string('postcode');
-            $table->string('city');
-            $table->string('thumbnail');
-            $table->longText('description');
-            $table->decimal('price', 9, 2);
-            $table->integer('rooms');
-            $table->integer('bathrooms');
-            $table->integer('living_rooms');
+            $table->integer('property_id')->unsigned();
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')
             ->on('users')
+            ->onDelete('cascade');
+            $table->foreign('property_id')->references('id')
+            ->on('properties')
             ->onDelete('cascade');
         });
     }
@@ -41,6 +35,6 @@ class CreatePropertyTable extends Migration
      */
     public function down()
     {
-        Schema::drop('properties');
+        Schema::drop('favourites');
     }
 }

@@ -14,6 +14,10 @@ class UserRepository
         return User::where('email', '=', $email)->first();
     }
 
+    public function getUser($userId){
+        return User::find($userId);
+    }
+
     public function saveUser($userInfo){
         $user = new User($userInfo);
         $user->save();

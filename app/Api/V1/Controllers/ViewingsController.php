@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Services\ViewingsRepository;
 use App\Services\PropertiesRepository;
+use App\Services\ViewingReservationsRepository;
 use App\Api\V1\Requests\ViewingRequest;
 use Dingo\Api\Routing\Helpers;
 
@@ -16,10 +17,14 @@ class ViewingsController extends Controller
 {
     use Helpers;
     protected $viewingsRepository;
-    
-    public function __construct(ViewingsRepository $viewingsRepository)
+    protected $viewingReservationsRepository;
+    protected $propertiesRepository;
+
+    public function __construct(ViewingsRepository $viewingsRepository, ViewingReservationsRepository $viewingReservationsRepository, PropertiesRepository $propertiesRepository)
     {
         $this->viewingsRepository = $viewingsRepository;
+        $this->viewingReservationsRepository = $viewingReservationsRepository;
+        $this->propertiesRepository = $propertiesRepository;
     }
 
     public function getAll(){
@@ -29,10 +34,30 @@ class ViewingsController extends Controller
         ]);
     }
 
-    public function getViewing($id){
+    public function getPropertyViewings($propertyId){
+        $property = $this->propertiesRepository->getById($propertyId);
+        if(!$property){
+            throw new NotFoundException("Property not found.");
+        }
+
+        return response()->json([
+            'viewings' => $this->viewingsRepository->getPropertyViewings($property)
+        ]);
+    }
+
+    public function getViewing(JWTAuth $JWTAuth, $id){
+        $user = $JWTAuth->toUser();
+
         $viewing = $this->viewingsRepository->getByid($id);
         if(!$viewing){
             throw new NotFoundHttpException("Viewing with id ".$id." was not found.");
+        }
+
+        $viewingReservation = $this->viewingReservationsRepository->getReservationForUserByViewingId($user, $viewing->id);
+        if($viewingReservation){
+            $viewing->viewing_reservation = [
+                'id' => $viewingReservation->id
+            ];
         }
 
         return response()->json($viewing);

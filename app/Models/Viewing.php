@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 class Viewing extends Model
 {
     /**
@@ -10,7 +12,11 @@ class Viewing extends Model
      * @var array
      */
     protected $fillable = [
-        'date_time', 'user_id', 'property_id'
+        'date_time', 'user_id', 'property_id', 'capacity', 'isLive'
+    ];
+
+    protected $casts = [
+        'isLive' => 'boolean',
     ];
 
     /**
@@ -18,9 +24,15 @@ class Viewing extends Model
      *
      * @var array
      */
+   
     protected $hidden = [
-        'created_at', 'updated_at'
+        'created_at', 'updated_at', 'user_id', 'property_id'
     ];
+
+   
+    // public function getDateTimeAttribute($dateTime) {
+    //     return Carbon::parse($dateTime)->toIso8601String();
+    // }
 
     public function user()
     {

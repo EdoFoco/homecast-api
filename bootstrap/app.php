@@ -61,6 +61,17 @@ $app->bind('RoomsRepository', function($app)
     return new RoomsRepository();
 });
 
+$app->bind('ViewingReservationsRepository', function($app)
+{
+    return new ViewingReservationsRepository();
+});
+
+$app->bind('ZooplaScraper', function($app)
+{
+    return new ZooplaScraper();
+});
+
+
 /*$app->bind('FavouritesRepository', function($app)
 {
     return new FavouritesRepository();

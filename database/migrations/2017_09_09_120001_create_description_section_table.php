@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateViewingsTable extends Migration
+class CreateDescriptionSectionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,13 @@ class CreateViewingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('viewings', function (Blueprint $table) {
+        Schema::create('description_sections', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
             $table->integer('property_id')->unsigned();
-            $table->integer('capacity')->default(10);
-            $table->boolean('isLive')->default(false);
-            $table->dateTime('date_time');
+            $table->string('title');
+            $table->longText('description');
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')
-            ->on('users')
-            ->onDelete('cascade');
-
             $table->foreign('property_id')->references('id')
             ->on('properties')
             ->onDelete('cascade');
@@ -39,6 +33,6 @@ class CreateViewingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('viewings');
+        Schema::drop('description_sections');
     }
 }

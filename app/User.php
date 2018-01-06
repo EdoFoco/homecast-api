@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'profile_picture'
+        'name', 'email', 'password', 'profile_picture', 'about'
     ];
 
     /**
@@ -53,5 +53,10 @@ class User extends Authenticatable
     public function viewings()
     {
         return $this->hasMany('App\Models\Viewing');
+    }
+
+    public function viewingReservations()
+    {
+        return $this->hasMany('App\Models\ViewingReservation');
     }
 }

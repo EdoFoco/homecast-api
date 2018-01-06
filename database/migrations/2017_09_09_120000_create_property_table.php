@@ -21,11 +21,13 @@ class CreatePropertyTable extends Migration
             $table->string('postcode');
             $table->string('city');
             $table->string('thumbnail');
-            $table->longText('description');
             $table->decimal('price', 9, 2);
-            $table->integer('rooms');
+            $table->integer('bedrooms');
             $table->integer('bathrooms');
             $table->integer('living_rooms');
+            $table->string('type');
+            $table->integer('minimum_rental_period')->nullable();
+            $table->boolean('listing_active')->default(false);
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')

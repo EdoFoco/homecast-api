@@ -38,11 +38,13 @@ return [
             'address' => 'required',
             'postcode' => 'required',
             'city' => 'required',
-            'price' => 'required | between:0,999999.99',
-            'description' => 'required',
-            'rooms' => 'required | integer',
+            'price' => 'required | between:0,9999999.99',
+            'description_sections' => 'required | array',
+            'bedrooms' => 'required | integer',
             'bathrooms' => 'required | integer',
-            'living_rooms' => 'required | integer'
+            'living_rooms' => 'required | integer',
+            'type' => 'required',
+            'minimum_rental_period' => 'integer'
         ]
     ],
 
@@ -55,6 +57,18 @@ return [
     'favourite' => [
         'validation_rules' => [
             'property_id' => 'required | integer'
+        ]
+    ],
+
+    'viewingReservation' => [
+        'validation_rules' => [
+            "viewing_id" => 'required'
+        ]
+    ],
+
+    'zooplaProperty' => [
+        'validation_rules' => [
+            "property_id" => 'required'
         ]
     ]
 

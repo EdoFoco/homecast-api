@@ -27,9 +27,11 @@ $api->version('v1', function (Router $api) {
         //Properties
         $api->get('properties', 'App\\Api\\V1\\Controllers\\PropertiesController@getAll');
         $api->post('properties', 'App\\Api\\V1\\Controllers\\PropertiesController@createProperty');
+        $api->post('properties/zoopla', 'App\\Api\\V1\\Controllers\\PropertiesController@createPropertyFromZoopla');
         $api->get('properties/{id}', 'App\\Api\\V1\\Controllers\\PropertiesController@getProperty');
+        $api->put('properties/{id}', 'App\\Api\\V1\\Controllers\\PropertiesController@updateProperty');
         $api->delete('properties/{id}', 'App\\Api\\V1\\Controllers\\PropertiesController@deleteProperty');
-        $api->get('properties/{id}/viewings', 'App\\Api\\V1\\Controllers\\ViewingsController@getAll');
+        $api->get('properties/{id}/viewings', 'App\\Api\\V1\\Controllers\\ViewingsController@getPropertyViewings');
         $api->post('properties/{id}/viewings', 'App\\Api\\V1\\Controllers\\ViewingsController@createViewing');
         
         //Viewings
@@ -37,7 +39,14 @@ $api->version('v1', function (Router $api) {
         $api->get('viewings/{id}', 'App\\Api\\V1\\Controllers\\ViewingsController@getViewing');
         $api->delete('viewings/{id}', 'App\\Api\\V1\\Controllers\\ViewingsController@deleteViewing');
         
-
+        //Reserved Viewings
+        $api->get('users/{id}/viewing-reservations', 'App\\Api\\V1\\Controllers\\ViewingReservationsController@getAll');
+        $api->post('users/{id}/viewing-reservations', 'App\\Api\\V1\\Controllers\\ViewingReservationsController@create');
+        $api->delete('users/{id}/viewing-reservations/{reservationId}', 'App\\Api\\V1\\Controllers\\ViewingReservationsController@delete');
+        
+        //Scrapers
+        $api->get('scrapers', 'App\\Api\\V1\\Controllers\\ScrapersController@get');
+        
         $api->get('refresh', [
             'middleware' => 'jwt.refresh',
             function() {

@@ -10,8 +10,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Services\PropertiesRepository;
 use App\Services\UserRepository;
 use App\Services\FavouritesRepository;
+use App\Services\ZooplaScraper;
 use App\Api\V1\Requests\PropertyRequest;
 use App\Api\V1\Requests\ViewingRequest;
+use App\Api\V1\Requests\ZooplaPropertyRequest;
 use Dingo\Api\Routing\Helpers;
 
 class PropertiesController extends Controller
@@ -20,12 +22,14 @@ class PropertiesController extends Controller
     protected $propertiesRepository;
     protected $userRepository;
     protected $favouritesRepository;
+    protected $zooplaScraper;
     
-    public function __construct(PropertiesRepository $propertiesRepository, UserRepository $userRepository, FavouritesRepository $favouritesRepository)
+    public function __construct(PropertiesRepository $propertiesRepository, UserRepository $userRepository, FavouritesRepository $favouritesRepository, ZooplaScraper $zooplaScraper)
     {
         $this->propertiesRepository = $propertiesRepository;
         $this->userRepository = $userRepository;
         $this->favouritesRepository = $favouritesRepository;
+        $this->zooplaScraper = $zooplaScraper;
     }
 
     public function getAll(JWTAuth $JWTAuth){
@@ -94,5 +98,25 @@ class PropertiesController extends Controller
 
         $this->propertiesRepository->deleteProperty($property);
         return $this->response()->noContent();
+    }
+
+    public function updateProperty($id, PropertyRequest $request, JWTAuth $JWTAuth){
+        $user = $JWTAuth->toUser();
+        $properties = $this->propertiesRepository->getUserProperties($user);
+        $property = $properties->find($id);
+
+        if(!$property){
+            throw new NotFoundHttpException("Property with id ".$id." was not found.");
+        }
+
+        $property = $this->propertiesRepository->updateProperty($property, $request);
+        return response()->json($property);
+    }
+
+    public function createPropertyFromZoopla(ZooplaPropertyRequest $request, JWTAuth $JWTAuth){
+        $user = $JWTAuth->toUser();
+
+        $id = $request->input('property_id');
+        $this->zooplaScraper->scrapeProperty($user, $id);
     }
 }

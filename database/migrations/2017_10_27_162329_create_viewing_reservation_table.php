@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateViewingsTable extends Migration
+class CreateViewingReservationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,17 @@ class CreateViewingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('viewings', function (Blueprint $table) {
+        Schema::create('viewing_reservations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('property_id')->unsigned();
-            $table->integer('capacity')->default(10);
-            $table->boolean('isLive')->default(false);
-            $table->dateTime('date_time');
+            $table->integer('viewing_id')->unsigned();
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')
             ->on('users')
             ->onDelete('cascade');
-
-            $table->foreign('property_id')->references('id')
-            ->on('properties')
+            $table->foreign('viewing_id')->references('id')
+            ->on('viewings')
             ->onDelete('cascade');
         });
     }
@@ -39,6 +35,6 @@ class CreateViewingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('viewings');
+        Schame::drop('viewing_reservations');
     }
 }

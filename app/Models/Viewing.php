@@ -17,6 +17,7 @@ class Viewing extends Model
 
     protected $casts = [
         'isLive' => 'boolean',
+        //'date_time' => 'datetime'
     ];
 
     /**
@@ -30,9 +31,9 @@ class Viewing extends Model
     ];
 
    
-    // public function getDateTimeAttribute($dateTime) {
-    //     return Carbon::parse($dateTime)->toIso8601String();
-    // }
+    public function getDateTimeAttribute($dateTime) {
+        return Carbon::parse($dateTime)->toIso8601String();
+    }
 
     public function user()
     {

@@ -43,6 +43,9 @@ class ViewingInvitationsController extends Controller
         $user = $JWTAuth->toUser();
 
         $properties = $user->properties;
+        if(!$properties){
+            throw new NotFoundHttpException("Resource not found");
+        }
         if(count($properties) == 0){
             throw new NotFoundHttpException("Resource not found");
         }

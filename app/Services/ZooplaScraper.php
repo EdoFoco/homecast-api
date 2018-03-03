@@ -52,11 +52,21 @@ class ZooplaScraper
             $property['name'] = $name[0];
         }
 
-        $node = $crawler->filter("img[title='Image 1']")->extract('src');
+        $node = $crawler->filter(".images-thumb")->attr('data-photo1');
+        
         if(count($node) > 0){
-            $property['thumbnail'] = str_replace('80/60', '645/430', $node[0]);
-            $property['thumbnail'] = str_replace('80_60', '645_430', $property['thumbnail']);
+            var_dump(json_encode($node));
+            echo $node[0];
+            $property['thumbnail'] = $node[0];
+           // $property['thumbnail'] = str_replace('80/60', '645/430', $node[0]);
+            //$property['thumbnail'] = str_replace('80_60', '645_430', $property['thumbnail']);
         }
+
+        // $node = $crawler->filter("img[title='Image 1']")->extract('src');
+        // if(count($node) > 0){
+        //     $property['thumbnail'] = str_replace('80/60', '645/430', $node[0]);
+        //     $property['thumbnail'] = str_replace('80_60', '645_430', $property['thumbnail']);
+        // }
         
         
         $addressNode = $crawler->filter(".listing-details-address > h2[itemprop*='streetAddress']")->extract('_text');

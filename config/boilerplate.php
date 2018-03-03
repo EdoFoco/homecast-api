@@ -66,6 +66,12 @@ return [
         ]
     ],
 
+    'viewingInvitation' => [
+        'validation_rules' => [
+            "user_email" => 'email'
+        ]
+    ],
+
     'zooplaProperty' => [
         'validation_rules' => [
             "property_id" => 'required'

@@ -44,6 +44,11 @@ $api->version('v1', function (Router $api) {
         $api->post('users/{id}/viewing-reservations', 'App\\Api\\V1\\Controllers\\ViewingReservationsController@create');
         $api->delete('users/{id}/viewing-reservations/{reservationId}', 'App\\Api\\V1\\Controllers\\ViewingReservationsController@delete');
         
+        //Viewing Invitations
+        $api->post('viewings/{id}/invitations', 'App\\Api\\V1\\Controllers\\ViewingInvitationsController@create');
+        $api->get('users/{id}/invitations', 'App\\Api\\V1\\Controllers\\ViewingInvitationsController@getInvitations');
+
+
         //Scrapers
         $api->get('scrapers', 'App\\Api\\V1\\Controllers\\ScrapersController@get');
         

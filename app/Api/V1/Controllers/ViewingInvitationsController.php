@@ -42,7 +42,7 @@ class ViewingInvitationsController extends Controller
     public function create(JWTAuth $JWTAuth, $viewingId, ViewingInvitationRequest $request){
         $user = $JWTAuth->toUser();
 
-        $properties = $user->properties();
+        $properties = $user->properties;
         if(count($properties) == 0){
             throw new NotFoundHttpException("Resource not found");
         }

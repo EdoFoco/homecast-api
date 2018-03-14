@@ -35,4 +35,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'googlePlaces' => [
+        'key' => env('GOOGLE_PLACES_KEY'),
+    ]
 ];

@@ -52,6 +52,12 @@ $api->version('v1', function (Router $api) {
         //Scrapers
         $api->get('scrapers', 'App\\Api\\V1\\Controllers\\ScrapersController@get');
         
+        //Location
+        $api->get('autocomplete', 'App\\Api\\V1\\Controllers\\LocationController@getAutocomplete');
+        $api->get('location', 'App\\Api\\V1\\Controllers\\LocationController@getGeocode');
+        $api->get('place', 'App\\Api\\V1\\Controllers\\LocationController@getPlace');
+
+        //JWT
         $api->get('refresh', [
             'middleware' => 'jwt.refresh',
             function() {

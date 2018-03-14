@@ -76,6 +76,10 @@ $app->bind('ZooplaScraper', function($app)
     return new ZooplaScraper();
 });
 
+$app->bind('GooglePlacesClient', function($app)
+{
+    return new GooglePlacesClient($apiKey);
+});
 
 /*$app->bind('FavouritesRepository', function($app)
 {

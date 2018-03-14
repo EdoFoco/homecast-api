@@ -76,6 +76,11 @@ return [
         'validation_rules' => [
             "property_id" => 'required'
         ]
-    ]
+    ],
 
+    'getPlace' => [
+        'validation_rules' => [
+            "place_id" => 'required'
+        ]
+    ],
 ];

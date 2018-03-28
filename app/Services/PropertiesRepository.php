@@ -5,11 +5,14 @@ namespace App\Services;
 use App\Models\Property;
 use App\Models\DescriptionSection;
 use App\User;
+use DB;
 
 class PropertiesRepository
 {
-    public function getAll(){
-        return Property::with('user', 'descriptionSections', 'viewings')->where('listing_active', '=', true)->get();
+    
+    public function getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
+        $query = $this->buildPropertiesQuery($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter); 
+        return $query->get();
     }
 
     public function getUserProperties(User $user){
@@ -69,5 +72,51 @@ class PropertiesRepository
 
     public function deleteProperty(Property $property){
         $property->delete();
+    }
+
+    private function getDistanceQuery($lat, $lng, $max_distance, $radius){
+        return "id, name, address, google_place_id, latitude, longitude, user_id, 
+            thumbnail, price, bedrooms, living_rooms, bathrooms, type, minimum_rental_period, listing_active, ( 
+            {$radius} * acos( 
+                cos( radians(  {$lat}  ) ) *
+                cos( radians( latitude ) ) * 
+                cos( radians( longitude ) - radians({$lng}) ) + 
+                sin( radians(  {$lat}  ) ) *
+                sin( radians( latitude ) ) 
+                )
+            ) AS distance";
+    }
+
+    private function buildPropertiesQuery($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
+        $radius = 3959;
+        $maxDistance = $maxDistanceFilter ? $maxDistanceFilter : 20;
+        
+        $query = Property::with('user', 'viewings', 'descriptionSections');
+        
+        if($coordinatesFilter){
+            $distanceQuery = $this->getDistanceQuery($coordinatesFilter->lat, $coordinatesFilter->lng, $maxDistance, $radius);
+            
+            $query->select(DB::raw($distanceQuery))
+                ->having("distance", "<", "{$maxDistance}")
+                ->orderBy("distance", 'asc');
+        }
+
+        if($bedroomsFilter){
+            $query->where('bedrooms', '=', $bedroomsFilter);
+        }
+
+        if($bathroomsFilter){
+            $query->where('bathrooms', '=', $bathroomsFilter);
+        }
+
+        if($minPriceFilter){
+            $query->where('price', '>=', $minPriceFilter);
+        }
+
+        if($maxPriceFilter){
+            $query->where('price', '<=', $maxPriceFilter);
+        }
+
+        return $query->where('listing_active', '=', true);
     }
 }

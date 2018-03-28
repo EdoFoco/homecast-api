@@ -13,8 +13,9 @@ class Property extends Model
     protected $fillable = [
         'name', 
         'address', 
-        'postcode', 
-        'city', 
+        'google_place_id', 
+        'latitude', 
+        'longitude',
         'user_id', 
         'thumbnail', 
         'price', 

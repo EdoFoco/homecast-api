@@ -10,8 +10,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Services\PropertiesRepository;
 use App\Services\UserRepository;
 use App\Services\FavouritesRepository;
+use App\Services\GooglePlacesClient;
 use App\Services\ZooplaScraper;
 use App\Api\V1\Requests\PropertyRequest;
+use App\Api\V1\Requests\GetPropertiesRequest;
 use App\Api\V1\Requests\ViewingRequest;
 use App\Api\V1\Requests\ZooplaPropertyRequest;
 use Dingo\Api\Routing\Helpers;
@@ -23,18 +25,42 @@ class PropertiesController extends Controller
     protected $userRepository;
     protected $favouritesRepository;
     protected $zooplaScraper;
+    protected $googlePlacesClient;
     
-    public function __construct(PropertiesRepository $propertiesRepository, UserRepository $userRepository, FavouritesRepository $favouritesRepository, ZooplaScraper $zooplaScraper)
+    public function __construct(PropertiesRepository $propertiesRepository, 
+        UserRepository $userRepository, 
+        FavouritesRepository $favouritesRepository, 
+        ZooplaScraper $zooplaScraper,
+        GooglePlacesClient $googlePlacesClient)
     {
         $this->propertiesRepository = $propertiesRepository;
         $this->userRepository = $userRepository;
         $this->favouritesRepository = $favouritesRepository;
         $this->zooplaScraper = $zooplaScraper;
+        $this->googlePlacesClient = $googlePlacesClient;
     }
 
-    public function getAll(JWTAuth $JWTAuth){
+    public function getAll(GetPropertiesRequest $request, JWTAuth $JWTAuth){
         $user = $JWTAuth->toUser();
-        $allProperties =  $this->propertiesRepository->getAll();
+
+        $coordinatesFilter = null;
+        $maxDistanceFilter = $request->input('max_distance');
+        $bedroomsFilter = $request->input('bedrooms');
+        $bathroomsFilter = $request->input('bathrooms');
+        $minPriceFilter = $request->input('min_price');
+        $maxPriceFilter = $request->input('max_price');
+
+        if($request->input('place_id')){
+            $place = $this->googlePlacesClient->getPlace($request->input('place_id'));
+            if(!$place){
+                throw new NotFoundHttpException();
+            }
+
+            $coordinatesFilter = $place['location'];
+        }
+
+        $allProperties = $this->propertiesRepository->getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter);
+
         $favourites = $this->favouritesRepository->getFavourites($user->id);
 
         $properties = [];

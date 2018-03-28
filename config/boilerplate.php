@@ -83,4 +83,14 @@ return [
             "place_id" => 'required'
         ]
     ],
+
+    'getPropertiesRequest' => [
+        'validation_rules' => [
+            'max_distance' => 'integer',
+            'bedrooms' => 'integer',
+            'bathrooms' => 'integer',
+            'min_price' => 'integer',
+            'max_price' => 'integer',
+        ]
+    ],
 ];

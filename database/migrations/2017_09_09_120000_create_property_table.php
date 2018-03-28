@@ -18,8 +18,9 @@ class CreatePropertyTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('name');
             $table->string('address');
-            $table->string('postcode');
-            $table->string('city');
+            $table->string('google_place_id');
+            $table->float('latitude', 10, 6)->nullable();
+            $table->float('longitude', 10, 6)->nullable();
             $table->string('thumbnail');
             $table->decimal('price', 9, 2);
             $table->integer('bedrooms');

@@ -47,11 +47,11 @@ class PropertiesController extends Controller
         $maxDistanceFilter = $request->input('max_distance');
         $bedroomsFilter = $request->input('bedrooms');
         $bathroomsFilter = $request->input('bathrooms');
-        $minPriceFilter = $request->input('min_price');
-        $maxPriceFilter = $request->input('max_price');
+        $minPriceFilter = $request->input('minPrice');
+        $maxPriceFilter = $request->input('maxPrice');
 
-        if($request->input('place_id')){
-            $place = $this->googlePlacesClient->getPlace($request->input('place_id'));
+        if($request->input('placeId')){
+            $place = $this->googlePlacesClient->getPlace($request->input('placeId'));
             if(!$place){
                 throw new NotFoundHttpException();
             }

@@ -89,8 +89,8 @@ return [
             'max_distance' => 'integer',
             'bedrooms' => 'integer',
             'bathrooms' => 'integer',
-            'min_price' => 'integer',
-            'max_price' => 'integer',
+            'minPrice' => 'integer',
+            'maxPrice' => 'integer',
         ]
     ],
 ];

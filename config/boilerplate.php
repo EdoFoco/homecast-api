@@ -93,4 +93,10 @@ return [
             'maxPrice' => 'integer',
         ]
     ],
+
+    'uploadPhotoRequest' => [
+        'validation_rules' => [
+            "image" => 'required | image'
+        ]
+    ],
 ];

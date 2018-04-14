@@ -57,4 +57,8 @@ class Property extends Model
     public function favourites(){
         return $this->hasMany('App\Models\Favourite');
     }
+
+    public function images(){
+        return $this->hasMany('App\Models\PropertyImage');
+    }
 }

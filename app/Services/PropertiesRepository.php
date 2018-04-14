@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Property;
 use App\Models\DescriptionSection;
+use App\Models\PropertyImage;
 use App\User;
+use Storage;
 use DB;
 
 class PropertiesRepository
@@ -16,11 +18,11 @@ class PropertiesRepository
     }
 
     public function getUserProperties(User $user){
-        return Property::with('user', 'descriptionSections', 'viewings')->where('user_id', '=', $user->id)->get();
+        return Property::with('user', 'descriptionSections', 'viewings', 'images')->where('user_id', '=', $user->id)->get();
     }
 
     public function getById($id){
-        return Property::with('user', 'descriptionSections', 'viewings')->find($id);
+        return Property::with('user', 'descriptionSections', 'viewings', 'images')->find($id);
     }
 
     public function createProperty(User $user, $propertyInfo){
@@ -74,6 +76,16 @@ class PropertiesRepository
         $property->delete();
     }
 
+    public function addPhotoToProperty($property, $photo){
+        $path = Storage::putFile('property-'.$property->id, $photo, 'public');
+        $path = Storage::url($path);
+
+        PropertyImage::create([
+            'property_id' => $property->id,
+            'url' => $path
+        ]);
+    }
+
     private function getDistanceQuery($lat, $lng, $max_distance, $radius){
         return "id, name, address, google_place_id, latitude, longitude, user_id, 
             thumbnail, price, bedrooms, living_rooms, bathrooms, type, minimum_rental_period, listing_active, ( 
@@ -91,7 +103,7 @@ class PropertiesRepository
         $radius = 3959;
         $maxDistance = $maxDistanceFilter ? $maxDistanceFilter : 20;
         
-        $query = Property::with('user', 'viewings', 'descriptionSections');
+        $query = Property::with('user', 'viewings', 'descriptionSections', 'images');
         
         if($coordinatesFilter){
             $distanceQuery = $this->getDistanceQuery($coordinatesFilter->lat, $coordinatesFilter->lng, $maxDistance, $radius);

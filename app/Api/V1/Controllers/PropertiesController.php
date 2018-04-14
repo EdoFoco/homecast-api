@@ -16,6 +16,7 @@ use App\Api\V1\Requests\PropertyRequest;
 use App\Api\V1\Requests\GetPropertiesRequest;
 use App\Api\V1\Requests\ViewingRequest;
 use App\Api\V1\Requests\ZooplaPropertyRequest;
+use App\Api\V1\Requests\UploadPhotoRequest;
 use Dingo\Api\Routing\Helpers;
 
 class PropertiesController extends Controller
@@ -138,6 +139,23 @@ class PropertiesController extends Controller
         $property = $this->propertiesRepository->updateProperty($property, $request);
         return response()->json($property);
     }
+
+    public function uploadPhoto($propertyId, UploadPhotoRequest $request, JWTAuth $JWTAuth){
+        //Todo: Get existing viewing by user, postcode, date/time, if exists throw conflict
+        $user = $JWTAuth->toUser();
+        $properties = $this->propertiesRepository->getUserProperties($user);
+        $property = $properties->find($propertyId);
+
+        if(!$property){
+            throw new NotFoundHttpException("Property with id ".$propertyId." was not found.");
+        }
+
+        $image = $request->file('image');
+        $this->propertiesRepository->addPhotoToProperty($property, $image);
+        // $property = $this->propertiesRepository->$prop($user, $request->all());
+        // return response()->json($property);
+    }
+
 
     public function createPropertyFromZoopla(ZooplaPropertyRequest $request, JWTAuth $JWTAuth){
         $user = $JWTAuth->toUser();

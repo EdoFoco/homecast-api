@@ -35,6 +35,6 @@ class CreateViewingReservationTable extends Migration
      */
     public function down()
     {
-        Schame::drop('viewing_reservations');
+        Schema::drop('viewing_reservations');
     }
 }

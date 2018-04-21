@@ -141,7 +141,6 @@ class PropertiesController extends Controller
     }
 
     public function uploadPhoto($propertyId, UploadPhotoRequest $request, JWTAuth $JWTAuth){
-        //Todo: Get existing viewing by user, postcode, date/time, if exists throw conflict
         $user = $JWTAuth->toUser();
         $properties = $this->propertiesRepository->getUserProperties($user);
         $property = $properties->find($propertyId);
@@ -152,15 +151,32 @@ class PropertiesController extends Controller
 
         $image = $request->file('image');
         $this->propertiesRepository->addPhotoToProperty($property, $image);
-        // $property = $this->propertiesRepository->$prop($user, $request->all());
-        // return response()->json($property);
+        return $this->response()->noContent();
     }
 
+    public function deletePhoto($propertyId, $photoId, JWTAuth $JWTAuth){
+        $user = $JWTAuth->toUser();
+        $properties = $this->propertiesRepository->getUserProperties($user);
+        $property = $properties->find($propertyId);
+
+        if(!$property){
+            throw new NotFoundHttpException("Property with id ".$propertyId." was not found.");
+        }
+
+        $image = $property->images->find($photoId);
+        if(!$image){
+            throw new NotFoundHttpException("Image with id ".$photoId." was not found.");
+        }
+
+        $this->propertiesRepository->deletePhotoFromProperty($property, $image);
+        return $this->response()->noContent();
+    }
 
     public function createPropertyFromZoopla(ZooplaPropertyRequest $request, JWTAuth $JWTAuth){
         $user = $JWTAuth->toUser();
 
         $id = $request->input('property_id');
         $this->zooplaScraper->scrapeProperty($user, $id);
+        return $this->response()->created();
     }
 }

@@ -8,6 +8,7 @@ use App\Models\PropertyImage;
 use App\User;
 use Storage;
 use DB;
+use Log;
 
 class PropertiesRepository
 {
@@ -84,6 +85,17 @@ class PropertiesRepository
             'property_id' => $property->id,
             'url' => $path
         ]);
+    }
+
+    public function deletePhotoFromProperty($property, $image){
+        $path = $this->getPhotoPath($image->url);
+        Storage::delete($path);
+        PropertyImage::destroy($image->id);
+    }
+
+    private function getPhotoPath($url){
+        $paths = explode('/', $url);
+        return $paths[count($paths) - 2].'/'.$paths[count($paths) - 1];
     }
 
     private function getDistanceQuery($lat, $lng, $max_distance, $radius){

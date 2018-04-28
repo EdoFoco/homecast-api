@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d36aa6f31603e4f5985afbe85a3f12fe",
+    "content-hash": "b874690e23ebdf4ec1bddaac7512761b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1239,6 +1239,62 @@
                 "jsonpath"
             ],
             "time": "2016-12-03T22:08:25+00:00"
+        },
+        {
+            "name": "musonza/chat",
+            "version": "v2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/musonza/chat.git",
+                "reference": "b4067ebc1cae2b64c636f7eaf42b5257aae4bd76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/musonza/chat/zipball/b4067ebc1cae2b64c636f7eaf42b5257aae4bd76",
+                "reference": "b4067ebc1cae2b64c636f7eaf42b5257aae4bd76",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "^5.3",
+                "illuminate/support": "^5.3",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "orchestra/database": "3.5.*",
+                "orchestra/testbench": "3.5.*",
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Musonza\\Chat\\ChatServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Musonza\\Chat\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tinashe Musonza",
+                    "email": "tinashemusonza@gmail.com"
+                }
+            ],
+            "description": "Laravel Chat Package",
+            "keywords": [
+                "chat",
+                "conversation",
+                "laravel",
+                "messaging"
+            ],
+            "time": "2018-02-07T05:39:24+00:00"
         },
         {
             "name": "namshi/jose",

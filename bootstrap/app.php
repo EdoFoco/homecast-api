@@ -81,6 +81,10 @@ $app->bind('GooglePlacesClient', function($app)
     return new GooglePlacesClient($apiKey);
 });
 
+$app->bind('ChatRepository', function($app)
+{
+    return new ChatRepository();
+});
 /*$app->bind('FavouritesRepository', function($app)
 {
     return new FavouritesRepository();

@@ -23,4 +23,8 @@ class UserRepository
         $user->save();
         return $user;
     }
+
+    public function findMany($ids){
+        return User::findMany($ids);
+    }
 }

@@ -99,4 +99,18 @@ return [
             "image" => 'required | image'
         ]
     ],
+
+    'createChatRequest' => [
+        'validation_rules' => [
+            "participants" => 'required | array',
+            'participants.*' => 'integer'
+        ]
+    ],
+
+    'createMessageRequest' => [
+        'validation_rules' => [
+            "message" => 'required | string',
+        ]
+    ],
+
 ];

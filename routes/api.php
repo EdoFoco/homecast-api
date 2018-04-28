@@ -59,6 +59,13 @@ $api->version('v1', function (Router $api) {
         $api->get('location', 'App\\Api\\V1\\Controllers\\LocationController@getGeocode');
         $api->get('place', 'App\\Api\\V1\\Controllers\\LocationController@getPlace');
 
+        //Chat
+        $api->post('chats', 'App\\Api\\V1\\Controllers\\ChatController@create');
+        $api->get('chats', 'App\\Api\\V1\\Controllers\\ChatController@getUserChats');
+        $api->post('chats/{id}/messages', 'App\\Api\\V1\\Controllers\\ChatController@createMessage');
+        $api->get('chats/{id}/messages', 'App\\Api\\V1\\Controllers\\ChatController@getMessages');
+
+
         //JWT
         $api->get('refresh', [
             'middleware' => 'jwt.refresh',

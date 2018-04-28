@@ -162,7 +162,9 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Weidner\Goutte\GoutteServiceProvider::class, 
+        Weidner\Goutte\GoutteServiceProvider::class,
+        Musonza\Chat\ChatServiceProvider::class,
+
         
         /*
          * Package Service Providers...
@@ -229,6 +231,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Goutte' => Weidner\Goutte\GoutteFacade::class,
+        'Chat' => Musonza\Chat\Facades\ChatFacade::class,
         
         /*
          * Package Facades...

@@ -57,7 +57,7 @@ class ChatController extends Controller
             throw new NotFoundHttpException("User not found");
         }
 
-        return $this->chatRepository->getUserChats($user->id);
+        return $this->chatRepository->getUserChats($user);
    }
 
    public function createMessage($conversationId, CreateMessageRequest $message, JWTAuth $JWTAuth){

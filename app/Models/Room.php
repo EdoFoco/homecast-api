@@ -27,8 +27,4 @@ class Room extends Model
         return $this->belongsTo('App\Models\Viewing');
     }
 
-    public function messages()
-    {
-        return $this->hasMany('App\Models\Message');
-    }
 }

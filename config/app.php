@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Weidner\Goutte\GoutteServiceProvider::class,
         Musonza\Chat\ChatServiceProvider::class,
+        NotificationChannels\Fcm\FcmServiceProvider::class,
 
         
         /*

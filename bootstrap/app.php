@@ -85,6 +85,11 @@ $app->bind('ChatRepository', function($app)
 {
     return new ChatRepository();
 });
+
+$app->bind('FcmService', function($app)
+{
+    return new FcmService();
+});
 /*$app->bind('FavouritesRepository', function($app)
 {
     return new FavouritesRepository();

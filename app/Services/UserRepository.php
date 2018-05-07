@@ -27,4 +27,9 @@ class UserRepository
     public function findMany($ids){
         return User::findMany($ids);
     }
+
+    public function addDeviceToken($user, $token){
+        $user->device_token = $token;
+        $user->save();
+    }
 }

@@ -113,4 +113,9 @@ return [
         ]
     ],
 
+    'addDeviceToken' => [
+        'validation_rules' => [
+            "token" => 'required | string',
+        ]
+    ],
 ];

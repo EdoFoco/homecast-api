@@ -18,6 +18,7 @@ $api->version('v1', function (Router $api) {
         //Users
         $api->get('users/me', 'App\\Api\\V1\\Controllers\\UsersController@getLoggedInUser');
         $api->get('users/{id}/properties', 'App\\Api\\V1\\Controllers\\PropertiesController@getUserProperties');
+        $api->post('users/{id}/token', 'App\\Api\\V1\\Controllers\\UsersController@addDeviceToken');
         
         //Favourites
         $api->get('users/{id}/favourites', 'App\\Api\\V1\\Controllers\\FavouritesController@getFavourites');

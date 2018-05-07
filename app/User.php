@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'profile_picture', 'about'
+        'name', 'email', 'password', 'profile_picture', 'about', 'device_token'
     ];
 
     /**
@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'created_at', 'updated_at'
+        'password', 'remember_token', 'created_at', 'updated_at', 'device_token'
     ];
 
     /**
@@ -38,12 +38,6 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value);
     }
-
-    public function messages()
-    {
-        return $this->hasMany('App\Models\Message');
-    }
-
 
     public function properties()
     {
@@ -63,4 +57,5 @@ class User extends Authenticatable
     public function viewingInvitations(){
         return $this->hasMany('App\Models\ViewingInvitation');
     }
+    
 }

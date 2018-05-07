@@ -5,7 +5,7 @@ namespace App\Api\V1\Controllers;
 use Tymon\JWTAuth\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Services\UserRepository;
-use App\Api\V1\Requests\FavouriteRequest;
+use App\Api\V1\Requests\AddDeviceTokenRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,6 +31,18 @@ class UsersController extends Controller
             'user' =>  $JWTAuth->toUser(),
             'token' => $token->get()
         ]);
+    }
+
+    public function addDeviceToken($userId, AddDeviceTokenRequest $request, JWTAuth $JWTAuth){
+        $user = $JWTAuth->toUser();
+
+        if($userId != $user->id){
+            throw new UnauthorizedHttpException();
+        }
+
+        $this->userRepository->addDeviceToken($user, $request->input('token'));
+
+        return $this->response->noContent();
     }
    
 }

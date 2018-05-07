@@ -29,6 +29,10 @@ return [
     */
 
     'connections' => [
+        'fcm' => [
+            'auth_token' => env('FCM_KEY'),
+            'url' => env('FCM_URL')
+        ],
 
         'pusher' => [
             'driver' => 'pusher',

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b874690e23ebdf4ec1bddaac7512761b",
+    "content-hash": "fddfd4de71b62a6972315fd3e7727b12",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -138,6 +138,59 @@
                 "laravel"
             ],
             "time": "2017-02-15T21:21:33+00:00"
+        },
+        {
+            "name": "coreproc/laravel-notification-channel-fcm",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CoreProc/fcm.git",
+                "reference": "bf3d98d59b5c572fdfed3515e10b7753d7959928"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CoreProc/fcm/zipball/bf3d98d59b5c572fdfed3515e10b7753d7959928",
+                "reference": "bf3d98d59b5c572fdfed3515e10b7753d7959928",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.2",
+                "illuminate/notifications": "^5.3|^5.4|^5.5|^5.6",
+                "illuminate/support": "^5.1|^5.2|^5.3|^5.4|^5.5|^5.6",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "5.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "NotificationChannels\\Fcm\\FcmServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NotificationChannels\\Fcm\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Bautista",
+                    "email": "chrisbjr@gmail.com",
+                    "homepage": "https://www.coreproc.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "FCM (Firebase Cloud Messaging) Notifications Driver for Laravel",
+            "homepage": "https://github.com/CoreProc/fcm",
+            "time": "2018-04-29T19:25:13+00:00"
         },
         {
             "name": "dingo/api",

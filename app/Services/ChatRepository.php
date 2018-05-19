@@ -45,6 +45,10 @@ class ChatRepository
                 'last_message' => $lastMessage
             ];
 
+            if(!$lastMessage){
+                continue;
+            }
+            
             array_push($conversationsData, $data);
         }
         

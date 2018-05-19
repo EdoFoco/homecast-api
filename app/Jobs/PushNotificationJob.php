@@ -19,6 +19,8 @@ class PushNotificationJob implements ShouldQueue
     protected $recipientIds;
     protected $data;
     protected $fcmService;
+
+    public $tries = 3;
     /**
      * Create a new job instance.
      *

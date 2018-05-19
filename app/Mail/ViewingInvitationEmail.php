@@ -12,6 +12,8 @@ class ViewingInvitationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $tries = 3;
+
     public $emailTo;
     public $viewing;
     public $emailFrom;

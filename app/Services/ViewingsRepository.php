@@ -17,7 +17,7 @@ class ViewingsRepository
     }
 
     public function getAll(){
-        return Viewing::with('property')->orderBy('date_time')->get();
+        return Viewing::with('property', 'property.images')->orderBy('date_time')->get();
     }
 
     public function getById($id){

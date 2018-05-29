@@ -45,9 +45,9 @@ class ChatController extends Controller
             throw new BadRequestHttpException("One or more participants do not exist.");
         }
 
-        $this->chatRepository->createConversation($participantIds);
+        $conversation = $this->chatRepository->createConversation($participantIds);
         
-        return $this->response->created();
+        return response()->json($conversation, 201);
    }
 
    public function getUserChats(JWTAuth $JWTAuth){

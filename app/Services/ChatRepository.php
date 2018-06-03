@@ -22,7 +22,7 @@ class ChatRepository
         ->join('mc_conversation_user', 'mc_conversations.id', '=', 'mc_conversation_user.conversation_id')
         ->where('mc_conversation_user.user_id', '=', $user->id)
         ->select('mc_conversations.*', 'mc_conversation_user.wasRead')->get();
-      
+
         $conversationsData = [];
         foreach($rawConversations as $conversation){
             $participants = DB::table('mc_conversation_user')
@@ -37,7 +37,7 @@ class ChatRepository
             ->select('mc_messages.id', 'mc_messages.body', 'users.id AS sender_id', 'users.name AS sender_name', 'users.profile_picture AS sender_profile_picture', 'mc_messages.created_at')
             ->orderBy('mc_messages.created_at', 'DESC')
             ->first();
-
+            
             $data = [
                 'id' => $conversation->id,
                 'wasRead' => $conversation->wasRead ,
@@ -61,7 +61,7 @@ class ChatRepository
 
     public function createMessage($user, $conversation, $message){
         
-        Chat::message($message)
+        $message = Chat::message($message)
             ->from($user)
             ->to($conversation)
             ->send(); 
@@ -81,6 +81,8 @@ class ChatRepository
         ];
 
         PushNotificationJob::dispatch($user->name, $message, $participantIds, $data);
+
+        return $message;
     }
 
     public function getMessages($user, $conversation, $limit = 25, $page = 1){

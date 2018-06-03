@@ -74,9 +74,9 @@ class ChatController extends Controller
             throw new UnauthorizedHttpException("");
         }
 
-        $this->chatRepository->createMessage($user, $conversation, $message->message);
+        $message = $this->chatRepository->createMessage($user, $conversation, $message->message);
 
-        return $this->response->created();
+        return response()->json($message, 201);
     }
 
     public function getMessages($conversationId, JWTAuth $JWTAuth){

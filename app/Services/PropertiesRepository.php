@@ -47,7 +47,7 @@ class PropertiesRepository
     }
 
     public function updateProperty(Property $property, $propertyInfo){
-        if(isset($propertyInfo['google_place_id'])){
+        if(isset($propertyInfo['google_place_id']) && $propertyInfo['google_place_id'] != $property->google_place_id){
             $place = $this->googlePlacesClient->getPlace($propertyInfo['google_place_id']);
             $property['address'] = $place['description'];
             $property->postcode = $place['postcode'];

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Property;
-use App\Models\DescriptionSection;
 use App\Models\PropertyImage;
 use App\User;
 use Storage;
@@ -12,65 +11,74 @@ use Log;
 
 class PropertiesRepository
 {
-    
+    protected $googlePlacesClient;
+
+    public function __construct(GooglePlacesClient $googlePlacesClient){
+        $this->googlePlacesClient = $googlePlacesClient;
+    }
+
     public function getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
         $query = $this->buildPropertiesQuery($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter); 
         return $query->get();
     }
 
     public function getUserProperties(User $user){
-        return Property::with('user', 'descriptionSections', 'viewings', 'images')->where('user_id', '=', $user->id)->get();
+        return Property::with('user', 'viewings', 'images')->where('user_id', '=', $user->id)->get();
     }
 
     public function getById($id){
-        return Property::with('user', 'descriptionSections', 'viewings', 'images')->find($id);
+        return Property::with('user', 'viewings', 'images')->find($id);
     }
 
     public function createProperty(User $user, $propertyInfo){
+        $place = $this->googlePlacesClient->getPlace($propertyInfo['google_place_id']);
+        $propertyInfo['latitude'] = $place['location']->lat;
+        $propertyInfo['longitude'] = $place['location']->lng;
+        $propertyInfo['address'] = $place['description'];
+        $propertyInfo['postcode'] = $place['postcode'];
+
+        //echo(json_encode($propertyInfo));
+        
         $property = new Property($propertyInfo);
+
         $user->properties()->save($property);
 
-        foreach($propertyInfo['description_sections'] as $description){
-            $property->descriptionSections()->save(new DescriptionSection($description));
-        }
-
-        return Property::with('descriptionSections', 'viewings')->find($property->id);
+        return Property::with('viewings')->find($property->id);
     }
 
     public function updateProperty(Property $property, $propertyInfo){
+        if(isset($propertyInfo['google_place_id'])){
+            $place = $this->googlePlacesClient->getPlace($propertyInfo['google_place_id']);
+            $property['address'] = $place['description'];
+            $property->postcode = $place['postcode'];
+            $property->latitude = $place['location']->lat;
+            $property->longitude = $place['location']->lng;
+            $property->google_place_id = $propertyInfo['google_place_id'];
+        }
+       
+        if(isset($propertyInfo['name']))
+            $property->name = $propertyInfo['name'];
+
+        if(isset($propertyInfo['description']))
+            $property->description = $propertyInfo['description'];
         
-        $property->name = $propertyInfo['name'];
-        $property->address = $propertyInfo['address'];
-        $property->city = $propertyInfo['city'];
-        $property->postcode = $propertyInfo['postcode'];
-        $property->listing_active = $propertyInfo['listing_active'];
-        $property->price = $propertyInfo['price'];
-        $property->minimum_rental_period = $propertyInfo['minimum_rental_period'];
-        $property->living_rooms = $propertyInfo['living_rooms'];
-        $property->bedrooms = $propertyInfo['bedrooms'];
-        $property->bathrooms = $propertyInfo['bathrooms'];
+        if(isset($propertyInfo['listing_active']))
+            $property->listing_active = $propertyInfo['listing_active'];
+      
+        if(isset($propertyInfo['price']))
+            $property->price = $propertyInfo['price'];
+        
+        if(isset($propertyInfo['living_rooms']))
+            $property->living_rooms = $propertyInfo['living_rooms'];
+      
+        if(isset($propertyInfo['bedrooms']))
+            $property->bedrooms = $propertyInfo['bedrooms'];
+        
+        if(isset($propertyInfo['bathrooms']))
+            $property->bathrooms = $propertyInfo['bathrooms'];
         $property->save();
 
-        $descriptions = $property->descriptionSections;
-        
-        foreach($propertyInfo['description_sections'] as $description){
-            
-            if(!isset($description['id'])){
-                $property->descriptionSections()->save(new DescriptionSection($description));
-            }
-            else{
-                if(count($descriptions) > 0){
-                    $existingDescription = $descriptions->find($description['id']);
-                    if($existingDescription){
-                        $existingDescription->title = $description['title'];
-                        $existingDescription->description = $description['description'];
-                        $existingDescription->save();
-                    }
-                }
-            }
-        }
-        
-        return Property::with('descriptionSections', 'viewings')->find($property->id);
+        return Property::with('viewings')->find($property->id);
     }
 
     public function deleteProperty(Property $property){
@@ -115,7 +123,7 @@ class PropertiesRepository
         $radius = 3959;
         $maxDistance = $maxDistanceFilter ? $maxDistanceFilter : 20;
         
-        $query = Property::with('user', 'viewings', 'descriptionSections', 'images');
+        $query = Property::with('user', 'viewings', 'images');
         
         if($coordinatesFilter){
             $distanceQuery = $this->getDistanceQuery($coordinatesFilter->lat, $coordinatesFilter->lng, $maxDistance, $radius);

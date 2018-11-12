@@ -13,6 +13,7 @@ use App\Services\FavouritesRepository;
 use App\Services\GooglePlacesClient;
 use App\Services\ZooplaScraper;
 use App\Api\V1\Requests\PropertyRequest;
+use App\Api\V1\Requests\UpdatePropertyRequest;
 use App\Api\V1\Requests\GetPropertiesRequest;
 use App\Api\V1\Requests\ViewingRequest;
 use App\Api\V1\Requests\ZooplaPropertyRequest;
@@ -111,10 +112,10 @@ class PropertiesController extends Controller
     }
 
     public function createProperty(PropertyRequest $request, JWTAuth $JWTAuth){
-        //Todo: Get existing viewing by user, postcode, date/time, if exists throw conflict
+        //Todo: Get existing property by user, postcode, date/time, if exists throw conflict
         $user = $JWTAuth->toUser();
         $property = $this->propertiesRepository->createProperty($user, $request->all());
-        return response()->json($property);
+        return $this->response()->created($property->id);
     }
 
     public function deleteProperty($id){
@@ -127,7 +128,7 @@ class PropertiesController extends Controller
         return $this->response()->noContent();
     }
 
-    public function updateProperty($id, PropertyRequest $request, JWTAuth $JWTAuth){
+    public function updateProperty($id, UpdatePropertyRequest $request, JWTAuth $JWTAuth){
         $user = $JWTAuth->toUser();
         $properties = $this->propertiesRepository->getUserProperties($user);
         $property = $properties->find($id);
@@ -136,7 +137,7 @@ class PropertiesController extends Controller
             throw new NotFoundHttpException("Property with id ".$id." was not found.");
         }
 
-        $property = $this->propertiesRepository->updateProperty($property, $request);
+        $property = $this->propertiesRepository->updateProperty($property, $request->all());
         return response()->json($property);
     }
 

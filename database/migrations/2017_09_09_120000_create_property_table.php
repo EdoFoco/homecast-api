@@ -16,18 +16,18 @@ class CreatePropertyTable extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('name');
-            $table->string('address');
+            $table->string('name')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('address')->nullable();
+            $table->string('postcode')->nullable();
             $table->string('google_place_id');
             $table->float('latitude', 10, 6)->nullable();
             $table->float('longitude', 10, 6)->nullable();
-            $table->string('thumbnail');
-            $table->decimal('price', 9, 2);
-            $table->integer('bedrooms');
-            $table->integer('bathrooms');
-            $table->integer('living_rooms');
-            $table->string('type');
-            $table->integer('minimum_rental_period')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->decimal('price', 9, 2)->nullable();;
+            $table->integer('bedrooms')->nullable();
+            $table->integer('bathrooms')->nullable();;
+            $table->integer('living_rooms')->nullable();;
             $table->boolean('listing_active')->default(false);
             $table->timestamps();
             

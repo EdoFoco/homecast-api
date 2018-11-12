@@ -5,6 +5,7 @@ namespace App\Services;
 use Config;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 class GooglePlacesClient
 {
@@ -27,25 +28,31 @@ class GooglePlacesClient
         }
 
         $client = new Client();
-        $res = $client->get($url);
-       
-        $suggestions = json_decode($res->getBody());
+        // $res = $client->get($url);
+        // $suggestions = json_decode($res->getBody());
+        
+        // if($suggestions->status != 'OK'){
+        //     Log::error('Error while calling Google Places. Url: '.$url);
+        //     return $result;
+        // }
+        
 
         $result = [];
         $result['suggestions'] = [];
 
-        if($suggestions->status != 'OK'){
-            Log::error('Error while calling Google Places. Url: '.$url);
-            return $result;
-        }
 
-        foreach($suggestions->predictions as $suggestion){
-            $tmpAddress = [];
-            $tmpAddress['description'] = $suggestion->description;
-            $tmpAddress['place_id'] = $suggestion->place_id;
+        // foreach($suggestions->predictions as $suggestion){
+        //     $tmpAddress = [];
+        //     $tmpAddress['description'] = $suggestion->description;
+        //     $tmpAddress['place_id'] = $suggestion->place_id;
 
-            array_push($result['suggestions'], $tmpAddress);
-        }
+        //     array_push($result['suggestions'], $tmpAddress);
+        // }
+
+        $tmpAddress = [];
+        $tmpAddress['description'] = "55 Blue Anchor";
+        $tmpAddress['place_id'] = "dlksajfajsfoi";
+        array_push($result['suggestions'], $tmpAddress);
 
         return $result;
     }
@@ -53,18 +60,24 @@ class GooglePlacesClient
     public function getPlace($placeId){
         $url = $this->baseUrl.$this->placeEndpoint.urlencode($placeId).'&key='.$this->apiKey;
         $client = new Client();
-        $res = $client->get($url);
+        // $res = $client->get($url);
         
-        $place = json_decode($res->getBody());
+        // $place = json_decode($res->getBody());
+        // if($place->status != 'OK'){
+        //     Log::error('Error while calling Google Places. Url: '.$url);
+        //     return null;
+        // }
+       
+        // $result = [];
+        // foreach($place->result->address_components as $component){
+        //     if(in_array('postal_code', $component->types)){
+        //         $result['postcode'] = $component->short_name;
+        //     }
+        // }
 
-        if($place->status != 'OK'){
-            Log::error('Error while calling Google Places. Url: '.$url);
-            return null;
-        }
-
-        $result = [];
-        $result['description'] = $place->result->formatted_address;
-        $result['location'] = $place->result->geometry->location;
+        $result['postcode'] = "SE163UL";
+        $result['description'] = "55 Blue Anchor Lane, SE163UL, London"; //$place->result->formatted_address;
+        $result['location'] = json_decode("{\"lat\":\"1\", \"lng\":\"2\"}"); //$place->result->geometry->location;
 
         return $result;
     }

@@ -34,17 +34,18 @@ return [
     ],
     'property' => [
         'validation_rules' => [
-            'name' => 'required',
-            'address' => 'required',
-            'postcode' => 'required',
-            'city' => 'required',
-            'price' => 'required | between:0,9999999.99',
-            'description_sections' => 'required | array',
-            'bedrooms' => 'required | integer',
-            'bathrooms' => 'required | integer',
-            'living_rooms' => 'required | integer',
-            'type' => 'required',
-            'minimum_rental_period' => 'integer'
+            'google_place_id' => 'required'
+        ]
+    ],
+    'update_property' => [
+        'validation_rules' => [
+            'google_place_id' => 'string | nullable',
+            'name' => 'string | nullable',
+            'city' => 'string | nullable',
+            'price' => 'between:0,9999999.99 | nullable',
+            'bedrooms' => 'integer | nullable',
+            'bathrooms' => 'integer | nullable',
+            'living_rooms' => 'integer | nullable',
         ]
     ],
 
@@ -115,7 +116,7 @@ return [
 
     'addDeviceToken' => [
         'validation_rules' => [
-            "token" => 'required | string',
+            "token" => 'string',
         ]
     ],
 ];

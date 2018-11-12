@@ -13,6 +13,7 @@ class Property extends Model
     protected $fillable = [
         'name', 
         'address', 
+        'postcode',
         'google_place_id', 
         'latitude', 
         'longitude',
@@ -22,8 +23,6 @@ class Property extends Model
         'bedrooms', 
         'living_rooms', 
         'bathrooms',
-        'type',
-        'minimum_rental_period',
         'listing_active'
     ];
 
@@ -42,11 +41,6 @@ class Property extends Model
     public function viewings()
     {
         return $this->hasMany('App\Models\Viewing');
-    }
-
-    public function descriptionSections()
-    {
-        return $this->hasMany('App\Models\DescriptionSection');
     }
 
     public function user()

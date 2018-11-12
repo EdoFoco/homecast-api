@@ -16,7 +16,9 @@ class PropertiesSeeder extends Seeder
         DB::table('properties')->insert([
             "user_id" => 1,
             "name" => "Chambord Mansion",
+            "description" => "Very nice house.",
             "address" => "Oxford St, London, UK",
+            "postcode" => "W1",
             "latitude" => 51.51495659999999,
             "longitude" => -0.1445616,
             "google_place_id" => "ChIJwTXDVNUadkgRGnzGNLlkIdo",
@@ -25,27 +27,15 @@ class PropertiesSeeder extends Seeder
             "bedrooms" => 7,
             "bathrooms" => 5,
             "living_rooms" => 3,
-            "type" => "rent",
-            "minimum_rental_period" => 12,
             "listing_active" => true
        ]);
-
-       DB::table('description_sections')->insert([
-                "property_id" => 1,
-                "title" => "Key Features",
-                "description" => "- Bright living room\n- Close to station\n- Spacious bedrooms"
-            ]);
-    
-       DB::table('description_sections')->insert([
-                "property_id" => 1,
-                "title" => "Description",
-                "description" => "Three story house in the heart of London. Situated 5minutes walking from Oxford Street it boosts 5 double bedrooms, three bathrooms, two balconies, an enormous kitchen and an amazing terrace. This place is perfect for parties of all kind.. Three story house in the heart of London"
-        ]);
 
         DB::table('properties')->insert([
             "user_id" => 1,
             "name" => "Casa di Groot",
+            "description" => "Very nice house.",
             "address" => "55 Blue Anchor Ln, London SE16 3TS, UK",
+            "postcode" => "SE16 3TS",
             "google_place_id" => "EiY1NSBCbHVlIEFuY2hvciBMbiwgTG9uZG9uIFNFMTYgM1RTLCBVSw",
             "latitude" => 51.492531,
             "longitude" => -0.0628745,
@@ -54,28 +44,16 @@ class PropertiesSeeder extends Seeder
             "bedrooms" => 2,
             "bathrooms" => 1,
             "living_rooms" => 1,
-            "type" => "buy",
-            "minimum_rental_period" => null,
             "listing_active" => true
        ]);
 
-       DB::table('description_sections')->insert([
-                "property_id" => 2,
-                "title" => "Key Features",
-                "description" => "- Bright living room\n- Close to station\n- Spacious bedrooms"
-            ]);
-
-        DB::table('description_sections')->insert([
-                "property_id" => 2,
-                "title" => "Description",
-                "description" => "Three story house in the heart of London. Situated 5minutes walking from Oxford Street it boosts 5 double bedrooms, three bathrooms, two balconies, an enormous kitchen and an amazing terrace. This place is perfect for parties of all kind.. Three story house in the heart of London"
-        ]);
-
-        DB::table('properties')->insert([
+       DB::table('properties')->insert([
             "user_id" => 1,
             "name" => "Whitfield",
+            "description" => "Very nice house.",
             "address" => "Columbia Rd, London E2 7RN, UK",
             "google_place_id" => "ChIJF7iYlbgcdkgRoitSmu5Ch8g",
+            "postcode" => "E2 7RN",
             "latitude" => 51.528436,
             "longitude" =>  -0.0714422,
             "thumbnail" => "https://s-ec.bstatic.com/images/hotel/max1024x768/782/78239966.jpg",
@@ -83,21 +61,7 @@ class PropertiesSeeder extends Seeder
             "bedrooms" => 5,
             "bathrooms" => 3,
             "living_rooms" => 2,
-            "type" => "rent",
-            "minimum_rental_period" => 3,
             "listing_active" => true
        ]);
-
-       DB::table('description_sections')->insert([
-            "property_id" => 3,
-            "title" => "Key Features",
-            "description" => "- Bright living room\n- Close to station\n- Spacious bedrooms"
-        ]);
-
-        DB::table('description_sections')->insert([
-            "property_id" => 3,
-            "title" => "Description",
-            "description" => "Three story house in the heart of London. Situated 5minutes walking from Oxford Street it boosts 5 double bedrooms, three bathrooms, two balconies, an enormous kitchen and an amazing terrace. This place is perfect for parties of all kind.. Three story house in the heart of London"
-        ]);
     }
 }

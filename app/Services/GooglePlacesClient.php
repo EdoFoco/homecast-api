@@ -72,6 +72,7 @@ class GooglePlacesClient
         }
        
         $result = [];
+        $result['postcode'] = '';
         foreach($place->result->address_components as $component){
             if(in_array('postal_code', $component->types)){
                 $result['postcode'] = $component->short_name;
@@ -81,7 +82,8 @@ class GooglePlacesClient
         // $result['postcode'] = "SE163UL";
         // $result['description'] = "55 Blue Anchor Lane, SE163UL, London"; //$place->result->formatted_address;
         // $result['location'] = json_decode("{\"lat\":\"1\", \"lng\":\"2\"}"); //$place->result->geometry->location;
-
+        $result['description'] = $place->result->formatted_address;
+        $result['location'] = $place->result->geometry->location;
         return $result;
     }
 }

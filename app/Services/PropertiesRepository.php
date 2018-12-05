@@ -27,7 +27,7 @@ class PropertiesRepository
     }
 
     public function getById($id){
-        return Property::with('user', 'viewings', 'images')->find($id);
+        return Property::with('user', 'viewings', 'viewings.reservations', 'images')->find($id);
     }
 
     public function createProperty(User $user, $propertyInfo){
@@ -36,8 +36,6 @@ class PropertiesRepository
         $propertyInfo['longitude'] = $place['location']->lng;
         $propertyInfo['address'] = $place['description'];
         $propertyInfo['postcode'] = $place['postcode'];
-
-        //echo(json_encode($propertyInfo));
         
         $property = new Property($propertyInfo);
 

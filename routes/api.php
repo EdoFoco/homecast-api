@@ -83,4 +83,11 @@ $api->version('v1', function (Router $api) {
             'message' => 'This is a simple example of item returned by your APIs. Everyone can see it.'
         ]);
     });
+
+    Route::get('/mailable', function () {
+        $viewing = App\Models\Viewing::with('property')->find(15);
+        $user = App\User::find(1);
+        return (new App\Mail\ViewingInvitationMD('ciccio@ciccio.text', 'edo', $viewing, $user))->render();
+        // return new App\Mail\ViewingInvitationEmail('edoardofire@hotmail.com', 'edoardofire@hotmail.com', $viewing);
+    });
 });

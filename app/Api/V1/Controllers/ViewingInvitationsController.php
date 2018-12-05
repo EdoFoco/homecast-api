@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotAuthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Dingo\Api\Routing\Helpers;
-use App\Mail\ViewingInvitationEmail;
+use App\Mail\ViewingInvitationMD;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -52,7 +52,7 @@ class ViewingInvitationsController extends Controller
 
         $propertyIds = $properties->pluck('id')->toArray();
         $viewing = $this->viewingsRepository->getById($viewingId);
-      
+       
         if(!$viewing || !in_array($viewing->property->id, $propertyIds)){
             throw new UnauthorizedHttpException("Not authorized");
         }
@@ -79,7 +79,7 @@ class ViewingInvitationsController extends Controller
             }
     
             try{
-                Mail::queue(new ViewingInvitationEmail($request->input('user_email'), 'Edoardo', $viewing));
+                Mail::queue(new ViewingInvitationMD($request->input('user_email'), 'Edoardo', $viewing, $user));
             }
             catch(Exception $e){
                 Log::debug($e);

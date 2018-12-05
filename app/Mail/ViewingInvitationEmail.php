@@ -37,21 +37,15 @@ class ViewingInvitationEmail extends Mailable
      */
     public function build()
     {
-        try{
-            return $this
-            ->from('e.foco@hotmail.it', 'Edoardo')
-            ->to($this->emailTo)
-            ->view('emails.ViewingInvitationEmail');
-        }
-        catch(Exception $e){
-            Log::error('Failed sending email to ');
-            Log::error($e);
-            return;
-        }
+        return $this
+        ->from('e.foco@hotmail.it', 'Edoardo')
+        ->to($this->emailTo)
+        ->view('emails.ViewingInvitationEmail');
     }
 
     public function failed(Exception $exception)
     {
         Log::error('Failed sending email to '.$this->emailTo);
+        Log::error($exception);
     }
 }

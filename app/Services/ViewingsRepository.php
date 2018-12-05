@@ -21,7 +21,7 @@ class ViewingsRepository
     }
 
     public function getById($id){
-        return Viewing::with('property', 'room')->find($id);
+        return Viewing::with('property', 'room', 'reservations')->find($id);
     }
 
     public function getPropertyViewings(Property $property){

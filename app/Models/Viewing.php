@@ -37,7 +37,7 @@ class Viewing extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\User');
     }
 
     public function room()
@@ -48,5 +48,9 @@ class Viewing extends Model
     public function property()
     {
         return $this->belongsTo('App\Models\Property');
+    }
+
+    public function reservations(){
+        return $this->hasMany('App\Models\ViewingReservation');
     }
 }

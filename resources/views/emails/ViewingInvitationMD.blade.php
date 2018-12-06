@@ -6,26 +6,26 @@
 @component('mail::panel')
     <div class="details-wrapper">
         <div class='panel-title'>{{Carbon\Carbon::parse($viewing->date_time)->format('d M Y')}}<br />{{Carbon\Carbon::parse($viewing->date_time)->format('g:i A')}} (UK time)</div>
+        <p class="section-title">Address</p>
+        <p class="section-description">{{$viewing->property->address}}</p>
+        <p class="section-title">Rooms</p>
+        <div class="rooms-container">
+            <div class="room">{{$viewing->property->bedrooms}} bed(s)</div>
+            <div class="room">{{$viewing->property->bathrooms}} bathroom(s)</div>
+            <div class="room">{{$viewing->property->living_rooms}} living room(s)</div>
+        </div>
+        <p class="section-title">Price</p>
+        <p class="section-description">{{$viewing->property->price}} £/m</p>
+        <p class="section-title">Description</p>
+        <p class="section-description">{{$viewing->property->description}}</p>
+        <div class="cta-container">
+            @component('mail::button', ['url' => 'http://homecast.com/properties/{{$viewing->property->id}}/viewings/{{$viewing->id}}'])
+                Go to Viewing
+            @endcomponent
+        </div>
+       
         
-            <p class="section-title">Address</p>
-            <p class="section-description">{{$viewing->property->address}}</p>
-            <p class="section-title">Price</p>
-            <p class="section-description">{{$viewing->property->price}} £/m</p>
-            <p class="section-title">Description</p>
-            <p class="section-description">{{$viewing->property->description}}</p>
-
-            <div class="cta-container">
-                @component('mail::button', ['url' => 'http://homecast.com/properties/{{$viewing->property->id}}/viewings/{{$viewing->id}}'])
-                    Go to Viewing
-                @endcomponent
-            </div>
-            <!-- <div class="rooms-container">
-                <div class="room">{{$viewing->property->bedrooms}} bed(s)</div>
-                <div class="room">{{$viewing->property->bathrooms}} bathroom(s)</div>
-                <div class="room">{{$viewing->property->living_rooms}} living room(s)</div>
-            </div> -->
-            
-            <img class="property-image" src="{{$viewing->property->images[0]->url}}" />
+        <img class="property-image" src="{{$viewing->property->images[0]->url}}" />
     </div>
     
   

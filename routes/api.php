@@ -90,4 +90,9 @@ $api->version('v1', function (Router $api) {
         return (new App\Mail\ViewingInvitationMD('ciccio@ciccio.text', 'edo', $viewing, $user))->render();
         // return new App\Mail\ViewingInvitationEmail('edoardofire@hotmail.com', 'edoardofire@hotmail.com', $viewing);
     });
+
+    Route::get('/redirect', function () {
+        return view('redirect.redirect');
+        // return new App\Mail\ViewingInvitationEmail('edoardofire@hotmail.com', 'edoardofire@hotmail.com', $viewing);
+    });
 });

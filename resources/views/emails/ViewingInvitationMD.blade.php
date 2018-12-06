@@ -19,7 +19,7 @@
         <p class="section-title">Description</p>
         <p class="section-description">{{$viewing->property->description}}</p>
         <div class="cta-container">
-            @component('mail::button', ['url' => 'http://homecast.com/properties/{{$viewing->property->id}}/viewings/{{$viewing->id}}'])
+            @component('mail::button', ['url' => 'http://127.0.0.1:8111/api/redirect?resources=properties,viewings&identifiers='.$viewing->property->id.','.$viewing->id ])
                 Go to Viewing
             @endcomponent
         </div>

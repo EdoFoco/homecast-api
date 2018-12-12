@@ -18,7 +18,7 @@ class CreateViewingsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('property_id')->unsigned();
             $table->integer('capacity')->default(10);
-            $table->boolean('isLive')->default(false);
+            $table->integer('viewing_status_id');
             $table->dateTime('date_time');
             $table->timestamps();
             

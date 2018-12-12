@@ -32,15 +32,16 @@ $api->version('v1', function (Router $api) {
         $api->get('properties/{id}', 'App\\Api\\V1\\Controllers\\PropertiesController@getProperty');
         $api->put('properties/{id}', 'App\\Api\\V1\\Controllers\\PropertiesController@updateProperty');
         $api->post('properties/{id}/photos', 'App\\Api\\V1\\Controllers\\PropertiesController@uploadPhoto');
-        $api->delete('properties/{id}/photos/{photoId}', 'App\\Api\\V1\\Controllers\\PropertiesController@deletePhoto');
+        $api->delete('properties/{id}/photos', 'App\\Api\\V1\\Controllers\\PropertiesController@deletePhotos');
         $api->delete('properties/{id}', 'App\\Api\\V1\\Controllers\\PropertiesController@deleteProperty');
         $api->get('properties/{id}/viewings', 'App\\Api\\V1\\Controllers\\ViewingsController@getPropertyViewings');
         $api->post('properties/{id}/viewings', 'App\\Api\\V1\\Controllers\\ViewingsController@createViewing');
-        
+        $api->post('properties/{id}/activation', 'App\\Api\\V1\\Controllers\\PropertiesController@activateProperty');
+
         //Viewings
         $api->get('viewings', 'App\\Api\\V1\\Controllers\\ViewingsController@getAll');
         $api->get('viewings/{id}', 'App\\Api\\V1\\Controllers\\ViewingsController@getViewing');
-        $api->delete('viewings/{id}', 'App\\Api\\V1\\Controllers\\ViewingsController@deleteViewing');
+        $api->delete('viewings/{id}', 'App\\Api\\V1\\Controllers\\ViewingsController@cancelViewing');
         
         //Reserved Viewings
         $api->get('users/{id}/viewing-reservations', 'App\\Api\\V1\\Controllers\\ViewingReservationsController@getAll');

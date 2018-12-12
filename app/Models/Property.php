@@ -11,7 +11,6 @@ class Property extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 
         'address', 
         'postcode',
         'google_place_id', 

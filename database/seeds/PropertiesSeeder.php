@@ -15,7 +15,6 @@ class PropertiesSeeder extends Seeder
     {
         DB::table('properties')->insert([
             "user_id" => 1,
-            "name" => "Chambord Mansion",
             "description" => "Very nice house.",
             "address" => "Oxford St, London, UK",
             "postcode" => "W1",
@@ -32,7 +31,6 @@ class PropertiesSeeder extends Seeder
 
         DB::table('properties')->insert([
             "user_id" => 1,
-            "name" => "Casa di Groot",
             "description" => "Very nice house.",
             "address" => "55 Blue Anchor Ln, London SE16 3TS, UK",
             "postcode" => "SE16 3TS",
@@ -49,7 +47,6 @@ class PropertiesSeeder extends Seeder
 
        DB::table('properties')->insert([
             "user_id" => 1,
-            "name" => "Whitfield",
             "description" => "Very nice house.",
             "address" => "Columbia Rd, London E2 7RN, UK",
             "google_place_id" => "ChIJF7iYlbgcdkgRoitSmu5Ch8g",

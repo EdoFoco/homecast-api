@@ -40,7 +40,6 @@ return [
     'update_property' => [
         'validation_rules' => [
             'google_place_id' => 'string | nullable',
-            'name' => 'string | nullable',
             'city' => 'string | nullable',
             'price' => 'between:0,9999999.99 | nullable',
             'bedrooms' => 'integer | nullable',
@@ -117,6 +116,12 @@ return [
     'addDeviceToken' => [
         'validation_rules' => [
             "token" => 'string',
+        ]
+    ],
+
+    'propertyActivationRequest' => [
+        'validation_rules' => [
+            "listing_active" => 'boolean | required',
         ]
     ],
 ];

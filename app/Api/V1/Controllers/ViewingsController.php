@@ -77,13 +77,13 @@ class ViewingsController extends Controller
         return response()->json($viewing);
     }
 
-    public function deleteViewing($id){
+    public function cancelViewing($id){
         $viewing = $this->viewingsRepository->getByid($id);
         if(!$viewing){
             throw new NotFoundHttpException("Viewing with id ".$id." was not found.");
         }
 
-        $this->viewingsRepository->deleteViewing($viewing);
+        $this->viewingsRepository->cancelViewing($viewing);
         return $this->response()->noContent();
     }
 }

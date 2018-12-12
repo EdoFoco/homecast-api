@@ -2,11 +2,14 @@
 
 namespace App\Api\V1\Controllers;
 
+use Exception;
 use Tymon\JWTAuth\JWTAuth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use App\Services\PropertiesRepository;
 use App\Services\UserRepository;
 use App\Services\FavouritesRepository;
@@ -18,6 +21,7 @@ use App\Api\V1\Requests\GetPropertiesRequest;
 use App\Api\V1\Requests\ViewingRequest;
 use App\Api\V1\Requests\ZooplaPropertyRequest;
 use App\Api\V1\Requests\UploadPhotoRequest;
+use App\Api\V1\Requests\PropertyActivationRequest;
 use Dingo\Api\Routing\Helpers;
 
 class PropertiesController extends Controller
@@ -141,6 +145,30 @@ class PropertiesController extends Controller
         return response()->json($property);
     }
 
+    public function activateProperty($id, PropertyActivationRequest $request, JWTAuth $JWTAuth){
+        $user = $JWTAuth->toUser();
+        $properties = $this->propertiesRepository->getUserProperties($user);
+        $property = $properties->find($id);
+
+        if(!$property){
+            throw new NotFoundHttpException("Property with id ".$id." was not found.");
+        }
+
+        $activateProperty = $request->input('listing_active');
+        if($activateProperty){
+            try{
+                $property = $this->propertiesRepository->activateProperty($property);
+            }
+            catch(Exception $e){
+                throw new BadRequestHttpException($e->getMessage());
+            }
+        }
+        else{
+            $property = $this->propertiesRepository->deActivateProperty($property);
+        }
+        return $this->response()->noContent();
+    }
+
     public function uploadPhoto($propertyId, UploadPhotoRequest $request, JWTAuth $JWTAuth){
         $user = $JWTAuth->toUser();
         $properties = $this->propertiesRepository->getUserProperties($user);
@@ -155,21 +183,29 @@ class PropertiesController extends Controller
         return $this->response()->noContent();
     }
 
-    public function deletePhoto($propertyId, $photoId, JWTAuth $JWTAuth){
+    public function deletePhotos($propertyId, Request $request, JWTAuth $JWTAuth){
         $user = $JWTAuth->toUser();
         $properties = $this->propertiesRepository->getUserProperties($user);
+        
+        $photoIds = $request->query('ids');
+        if(!$photoIds ){
+            throw new BadRequestHttpException('Id\'s are required.');
+        }
+
+        $photoIds = explode(',', $photoIds);
+
         $property = $properties->find($propertyId);
 
         if(!$property){
             throw new NotFoundHttpException("Property with id ".$propertyId." was not found.");
         }
 
-        $image = $property->images->find($photoId);
-        if(!$image){
-            throw new NotFoundHttpException("Image with id ".$photoId." was not found.");
+        $images = $property->images->find($photoIds);
+        if(count($images) < 1){
+            throw new NotFoundHttpException("Incorrect photo ids.");
         }
 
-        $this->propertiesRepository->deletePhotoFromProperty($property, $image);
+        $this->propertiesRepository->deletePhotosFromProperty($property, $images);
         return $this->response()->noContent();
     }
 

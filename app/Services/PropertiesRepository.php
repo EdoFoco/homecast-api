@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use App\User;
+use App\Services\PropertyValidator;
 use Storage;
 use DB;
 use Log;
@@ -12,9 +13,13 @@ use Log;
 class PropertiesRepository
 {
     protected $googlePlacesClient;
+    protected $propertyValidator;
+    protected $viewingsRepository;
 
-    public function __construct(GooglePlacesClient $googlePlacesClient){
+    public function __construct(GooglePlacesClient $googlePlacesClient, PropertyValidator $propertyValidator, ViewingsRepository $viewingsRepository){
         $this->googlePlacesClient = $googlePlacesClient;
+        $this->propertyValidator = $propertyValidator;
+        $this->viewingsRepository = $viewingsRepository;
     }
 
     public function getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
@@ -54,15 +59,9 @@ class PropertiesRepository
             $property->google_place_id = $propertyInfo['google_place_id'];
         }
        
-        if(isset($propertyInfo['name']))
-            $property->name = $propertyInfo['name'];
-
         if(isset($propertyInfo['description']))
             $property->description = $propertyInfo['description'];
         
-        if(isset($propertyInfo['listing_active']))
-            $property->listing_active = $propertyInfo['listing_active'];
-      
         if(isset($propertyInfo['price']))
             $property->price = $propertyInfo['price'];
         
@@ -93,10 +92,12 @@ class PropertiesRepository
         ]);
     }
 
-    public function deletePhotoFromProperty($property, $image){
-        $path = $this->getPhotoPath($image->url);
-        Storage::delete($path);
-        PropertyImage::destroy($image->id);
+    public function deletePhotosFromProperty($property, $images){
+        foreach($images as $image){
+            $path = $this->getPhotoPath($image->url);
+            Storage::delete($path);
+            PropertyImage::destroy($image->id);
+        }
     }
 
     private function getPhotoPath($url){
@@ -148,5 +149,20 @@ class PropertiesRepository
         }
 
         return $query->where('listing_active', '=', true);
+    }
+
+    public function activateProperty($property){
+        $this->propertyValidator->validateActivationDetails($property);
+        $property->listing_active = true;
+        $property->save();
+    }
+
+    public function deActivateProperty($property){
+        //Todo: Cancel all viewings
+        foreach($property->viewings as $viewing){
+            $this->viewingsRepository->cancelViewing($viewing);
+        }
+        $property->listing_active = false;
+        $property->save();
     }
 }

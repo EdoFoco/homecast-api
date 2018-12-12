@@ -90,6 +90,11 @@ $app->bind('FcmService', function($app)
 {
     return new FcmService();
 });
+
+$app->bind('PropertyValidator', function($app)
+{
+    return new PropertyValidator();
+});
 /*$app->bind('FavouritesRepository', function($app)
 {
     return new FavouritesRepository();

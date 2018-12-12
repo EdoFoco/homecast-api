@@ -12,14 +12,10 @@ class Viewing extends Model
      * @var array
      */
     protected $fillable = [
-        'date_time', 'user_id', 'property_id', 'capacity', 'isLive'
+        'date_time', 'user_id', 'property_id', 'capacity', 'viewing_status_id'
     ];
 
-    protected $casts = [
-        'isLive' => 'boolean',
-        //'date_time' => 'datetime'
-    ];
-
+   
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -52,5 +48,10 @@ class Viewing extends Model
 
     public function reservations(){
         return $this->hasMany('App\Models\ViewingReservation');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo('App\Models\ViewingStatus', 'viewing_status_id');
     }
 }

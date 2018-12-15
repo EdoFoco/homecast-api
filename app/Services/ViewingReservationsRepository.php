@@ -9,7 +9,7 @@ use App\User;
 class ViewingReservationsRepository
 {
     public function getReservationsForUser(User $user){
-        return $user->viewingReservations()->with('viewing', 'viewing.property', 'viewing.property.images')->get();
+        return $user->viewingReservations()->with('viewing', 'viewing.status', 'viewing.property', 'viewing.property.images')->get();
     }
 
     public function getReservationForUserById(User $user, $reservationId){

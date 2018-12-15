@@ -19,8 +19,8 @@ class ViewingsRepository
 
     public function getAll(){
         return Viewing::with('status', 'property', 'property.images')
-            ->whereDate('date_time', '>=', Carbon::now()->subDays(1))
-            ->orderBy('date_time')
+            ->whereDate('date_time', '>=', Carbon::now())
+            ->orderByDesc('date_time')
             ->get();
     }
 
@@ -29,7 +29,10 @@ class ViewingsRepository
     }
 
     public function getPropertyViewings(Property $property){
-        return $property->viewings()->with('status', 'property')->get();
+        return $property->viewings()->with('status', 'property')
+        ->whereDate('date_time', '>=', Carbon::now()->subDays(1))
+        ->orderByDesc('date_time')
+        ->get();
     }
  
     public function createViewing(Property $property, $timestamp){

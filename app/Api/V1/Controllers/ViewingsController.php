@@ -64,8 +64,6 @@ class ViewingsController extends Controller
     }
 
     public function createViewing($propertyId, ViewingRequest $request, JWTAuth $JWTAuth){
-        //Todo: Get Viewing by date, if exists throw conflict
-
         $user = $JWTAuth->toUser();
         $property = $user->properties()->find($propertyId);
 
@@ -74,7 +72,7 @@ class ViewingsController extends Controller
         }
 
         $viewing = $this->viewingsRepository->createViewing($property, $request->all());
-        return response()->json($viewing);
+        return response()->json($viewing, 201);
     }
 
     public function cancelViewing($id){

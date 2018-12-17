@@ -23,7 +23,7 @@ class Viewing extends Model
      */
    
     protected $hidden = [
-        'created_at', 'updated_at', 'user_id', 'property_id'
+        'created_at', 'updated_at', 'user_id',
     ];
 
    

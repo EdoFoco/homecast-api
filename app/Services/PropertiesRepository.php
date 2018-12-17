@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use App\User;
+use Carbon\Carbon;
 use App\Services\PropertyValidator;
 use Storage;
 use DB;
@@ -23,16 +24,21 @@ class PropertiesRepository
     }
 
     public function getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
-        $query = $this->buildPropertiesQuery($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter); 
-        return $query->get();
+        return $this->getAllWithFilters($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter); 
     }
 
     public function getUserProperties(User $user){
-        return Property::with('user', 'viewings', 'images')->where('user_id', '=', $user->id)->get();
+        return Property::with(['user:id', 'images', 'viewings' => function ($q) {
+            $q->with('status')
+            ->whereDate('date_time', '>=', Carbon::now()->subDays(1))
+            ->orderByDesc('date_time');
+         }])->get();
     }
 
     public function getById($id){
-        return Property::with('user', 'viewings', 'viewings.reservations', 'images')->find($id);
+        $property = Property::with('user:id', 'images')->find($id);
+        $property['nextViewing'] = $this->viewingsRepository->getNextViewing($property);;
+        return $property;
     }
 
     public function createProperty(User $user, $propertyInfo){
@@ -118,11 +124,10 @@ class PropertiesRepository
             ) AS distance";
     }
 
-    private function buildPropertiesQuery($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
+    private function getAllWithFilters($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
         $radius = 3959;
         $maxDistance = $maxDistanceFilter ? $maxDistanceFilter : 20;
-        
-        $query = Property::with('user', 'viewings', 'images');
+        $query = Property::with('user:id', 'images', 'viewings', 'viewings.status');
         
         if($coordinatesFilter){
             $distanceQuery = $this->getDistanceQuery($coordinatesFilter->lat, $coordinatesFilter->lng, $maxDistance, $radius);
@@ -148,7 +153,13 @@ class PropertiesRepository
             $query->where('price', '<=', $maxPriceFilter);
         }
 
-        return $query->where('listing_active', '=', true);
+        $properties = $query->where('listing_active', '=', true)->get();
+        foreach($properties as $property){
+            $nextViewing = $this->viewingsRepository->getNextViewing($property);
+            $property['nextViewing'] = $nextViewing;
+        }
+
+        return $properties;
     }
 
     public function activateProperty($property){

@@ -34,6 +34,15 @@ class ViewingsRepository
         ->orderByDesc('date_time')
         ->get();
     }
+
+    public function getNextViewing(Property $property){
+        return $property->viewings()->whereHas('status', function($q) {
+                $q->where('status', '=', 'ACTIVE');
+            })
+            ->whereDate('date_time', '>=', Carbon::now()->subDays(1))
+            ->orderByDesc('date_time')
+            ->first();
+    }
  
     public function createViewing(Property $property, $timestamp){
         $statusId = ViewingStatus::where('status', '=', 'ACTIVE')->first()->id;

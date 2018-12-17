@@ -196,6 +196,10 @@ class PropertiesController extends Controller
 
         $property = $properties->find($propertyId);
 
+        if($property->listing_active && count($photoIds) >= count($property->images)){
+            throw new BadRequestHttpException('You cannot delete all images while the listing is active.');
+        }
+
         if(!$property){
             throw new NotFoundHttpException("Property with id ".$propertyId." was not found.");
         }

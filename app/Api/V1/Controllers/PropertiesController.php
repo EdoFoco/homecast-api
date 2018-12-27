@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use App\Services\PropertiesRepository;
 use App\Services\UserRepository;
 use App\Services\FavouritesRepository;
@@ -104,10 +105,10 @@ class PropertiesController extends Controller
         return response()->json($property);
     }
 
-    public function getUserProperties($userId){
-        $user = $this->userRepository->getUser($userId);
-        if(!$user){
-            throw new NotFoundHttpException("User not found");
+    public function getUserProperties(JWTAuth $JWTAuth, $userId){
+        $user = $JWTAuth->toUser();
+        if($user->id != $userId){
+            throw new UnauthorizedHttpException("Unauthorized");
         }
         
         return response()->json([

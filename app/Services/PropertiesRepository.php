@@ -32,7 +32,9 @@ class PropertiesRepository
             $q->with('status')
             ->whereDate('date_time', '>=', Carbon::now()->subDays(1))
             ->orderByDesc('date_time');
-         }])->get();
+         }])
+         ->where('user_id', '=', $user->id)
+         ->get();
     }
 
     public function getById($id){

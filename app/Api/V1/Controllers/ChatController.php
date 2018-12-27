@@ -90,7 +90,7 @@ class ChatController extends Controller
 
         $usersInConversation = $conversation->users->pluck('id')->all();
         if(!in_array($user->id, $usersInConversation)){
-            throw new UnauthorizedHttpException("");
+            throw new UnauthorizedHttpException("You're not authorized to read this conversation.");
         }
 
         return $this->chatRepository->getMessages($user, $conversation);

@@ -90,8 +90,7 @@ class ChatRepository
         return $message;
     }
 
-    public function getMessages($user, $conversation, $limit = 25, $page = 1){
-       
+    public function getMessages($user, $conversation, $page = 1, $limit = 25){
        $this->readConversation($user, $conversation);
        return $conversation->getMessages($user, $limit, $page, 'desc');
     }

@@ -14,6 +14,7 @@ use App\Api\V1\Requests\CreateMessageRequest;
 use App\Services\ChatRepository;
 use App\Services\UserRepository;
 use Dingo\Api\Routing\Helpers;
+use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
@@ -79,7 +80,7 @@ class ChatController extends Controller
         return response()->json($message, 201);
     }
 
-    public function getMessages($conversationId, JWTAuth $JWTAuth){
+    public function getMessages($conversationId, JWTAuth $JWTAuth, Request $request){
 
         $user = $JWTAuth->toUser();
         
@@ -93,6 +94,7 @@ class ChatController extends Controller
             throw new UnauthorizedHttpException("You're not authorized to read this conversation.");
         }
 
-        return $this->chatRepository->getMessages($user, $conversation);
+        $page = $request->input('page');
+        return $this->chatRepository->getMessages($user, $conversation, $page);
    }
 }

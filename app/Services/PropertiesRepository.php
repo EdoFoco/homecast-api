@@ -16,15 +16,17 @@ class PropertiesRepository
     protected $googlePlacesClient;
     protected $propertyValidator;
     protected $viewingsRepository;
+    protected $favouritesRepository;
 
-    public function __construct(GooglePlacesClient $googlePlacesClient, PropertyValidator $propertyValidator, ViewingsRepository $viewingsRepository){
+    public function __construct(GooglePlacesClient $googlePlacesClient, PropertyValidator $propertyValidator, ViewingsRepository $viewingsRepository, FavouritesRepository $favouritesRepository){
         $this->googlePlacesClient = $googlePlacesClient;
         $this->propertyValidator = $propertyValidator;
         $this->viewingsRepository = $viewingsRepository;
+        $this->favouritesRepository = $favouritesRepository;
     }
 
-    public function getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
-        return $this->getAllWithFilters($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter); 
+    public function getAll($user, $coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
+        return $this->getAllWithFilters($user, $coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter); 
     }
 
     public function getUserProperties(User $user){
@@ -114,28 +116,32 @@ class PropertiesRepository
     }
 
     private function getDistanceQuery($lat, $lng, $max_distance, $radius){
-        return "id, name, address, google_place_id, latitude, longitude, user_id, 
-            thumbnail, price, bedrooms, living_rooms, bathrooms, type, minimum_rental_period, listing_active, ( 
-            {$radius} * acos( 
-                cos( radians(  {$lat}  ) ) *
-                cos( radians( latitude ) ) * 
-                cos( radians( longitude ) - radians({$lng}) ) + 
-                sin( radians(  {$lat}  ) ) *
-                sin( radians( latitude ) ) 
-                )
-            ) AS distance";
+        $distanceWhere = $this->getDistanceWhere($radius, $lat, $lng);
+        return "id, address, google_place_id, latitude, longitude, user_id, 
+            thumbnail, price, bedrooms, living_rooms, bathrooms, listing_active, 
+            ({$distanceWhere}) AS distance";
     }
 
-    private function getAllWithFilters($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter){
+    private function getDistanceWhere($radius, $lat, $lng){
+        return "{$radius} * acos( 
+            cos( radians(  {$lat}  ) ) *
+            cos( radians( latitude ) ) * 
+            cos( radians( longitude ) - radians({$lng}) ) + 
+            sin( radians(  {$lat}  ) ) *
+            sin( radians( latitude ) ) 
+            )";
+    }
+
+    private function getAllWithFilters($user, $coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter, $pageLimit = 25){
         $radius = 3959;
         $maxDistance = $maxDistanceFilter ? $maxDistanceFilter : 20;
         $query = Property::with('user:id', 'images', 'viewings', 'viewings.status');
         
         if($coordinatesFilter){
             $distanceQuery = $this->getDistanceQuery($coordinatesFilter->lat, $coordinatesFilter->lng, $maxDistance, $radius);
-            
             $query->select(DB::raw($distanceQuery))
-                ->having("distance", "<", "{$maxDistance}")
+                //->having("distance", "<", "{$maxDistance}")
+                ->whereRaw($this->getDistanceWhere($radius, $coordinatesFilter->lat, $coordinatesFilter->lng)." < {$maxDistance}")
                 ->orderBy("distance", 'asc');
         }
 
@@ -155,10 +161,13 @@ class PropertiesRepository
             $query->where('price', '<=', $maxPriceFilter);
         }
 
-        $properties = $query->where('listing_active', '=', true)->get();
+        $properties = $query->where('listing_active', '=', true)->paginate($pageLimit);
+        
         foreach($properties as $property){
             $nextViewing = $this->viewingsRepository->getNextViewing($property);
+            $isFavourites = $this->favouritesRepository->getFavourite($user->id, $property->id);
             $property['nextViewing'] = $nextViewing;
+            $property['isFavourite'] = isset($isFavourites);
         }
 
         return $properties;

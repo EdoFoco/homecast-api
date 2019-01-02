@@ -66,25 +66,7 @@ class PropertiesController extends Controller
             $coordinatesFilter = $place['location'];
         }
 
-        $allProperties = $this->propertiesRepository->getAll($coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter);
-
-        $favourites = $this->favouritesRepository->getFavourites($user->id);
-
-        $properties = [];
-        foreach($allProperties as $property){
-            if($favourites->contains('property_id', $property->id)){
-                $property->isFavourite = true;
-                array_push($properties, $property);
-            }
-            else{
-                $property->isFavourite = false;
-                array_push($properties, $property);
-            }
-        }
-
-        return response()->json([
-            'properties' => $properties
-        ]);
+        return $this->propertiesRepository->getAll($user, $coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter);
     }
 
     public function getProperty(JWTAuth $JWTAuth, $id){

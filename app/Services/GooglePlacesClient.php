@@ -79,9 +79,6 @@ class GooglePlacesClient
             }
         }
 
-        // $result['postcode'] = "SE163UL";
-        // $result['description'] = "55 Blue Anchor Lane, SE163UL, London"; //$place->result->formatted_address;
-        // $result['location'] = json_decode("{\"lat\":\"1\", \"lng\":\"2\"}"); //$place->result->geometry->location;
         $result['description'] = $place->result->formatted_address;
         $result['location'] = $place->result->geometry->location;
         return $result;

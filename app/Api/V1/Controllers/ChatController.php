@@ -51,14 +51,15 @@ class ChatController extends Controller
         return response()->json($conversation, 201);
    }
 
-   public function getUserChats(JWTAuth $JWTAuth){
+   public function getUserChats(JWTAuth $JWTAuth, Request $request){
 
         $user = $JWTAuth->toUser();
         if(!$user){
             throw new NotFoundHttpException("User not found");
         }
 
-        return $this->chatRepository->getUserChats($user);
+        $senderNameQuery = $request->input('sender_name');
+        return $this->chatRepository->getUserChats($user, $senderNameQuery);
    }
 
    public function createMessage($conversationId, CreateMessageRequest $message, JWTAuth $JWTAuth){

@@ -46,8 +46,22 @@ class ChatController extends Controller
             throw new BadRequestHttpException("One or more participants do not exist.");
         }
 
+        //Find existing chat, return chat if exists
+        $userChats = $this->chatRepository->getUserChats($user, null, 100);
+        $existingChat;
+        foreach($userChats['data'] as $chat){
+            $ids = [];
+            foreach($chat['users'] as $chatUser){
+                array_push($ids, $chatUser->id);
+            }
+
+            $diff = array_diff($ids, $participantIds);
+            if(count($diff) == 0){
+                return $chat;
+            }
+        }
+
         $conversation = $this->chatRepository->createConversation($participantIds);
-        
         return response()->json($conversation, 201);
    }
 

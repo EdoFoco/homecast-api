@@ -16,7 +16,7 @@ class ChatRepository
         return Chat::createConversation($participants); 
     }
 
-    public function getUserChats($user, $senderNameQuery, $limit = 2){
+    public function getUserChats($user, $senderNameQuery, $limit = 25){
         //Laravel autodetects the current page through the 'page' query string parameter
         $rawConversationsQuery = DB::table('mc_conversations')
         ->join('mc_conversation_user', 'mc_conversations.id', '=', 'mc_conversation_user.conversation_id')

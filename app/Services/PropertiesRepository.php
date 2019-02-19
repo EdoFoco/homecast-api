@@ -135,7 +135,7 @@ class PropertiesRepository
     private function getAllWithFilters($user, $coordinatesFilter, $maxDistanceFilter, $bedroomsFilter, $bathroomsFilter, $minPriceFilter, $maxPriceFilter, $pageLimit = 25){
         $radius = 3959;
         $maxDistance = $maxDistanceFilter ? $maxDistanceFilter : 20;
-        $query = Property::with('user:id', 'images', 'viewings', 'viewings.status');
+        $query = Property::with('user:id', 'images');
         
         if($coordinatesFilter){
             $distanceQuery = $this->getDistanceQuery($coordinatesFilter->lat, $coordinatesFilter->lng, $maxDistance, $radius);
@@ -166,6 +166,14 @@ class PropertiesRepository
         foreach($properties as $property){
             $nextViewing = $this->viewingsRepository->getNextViewing($property);
             $isFavourites = $this->favouritesRepository->getFavourite($user->id, $property->id);
+            $viewings = $this->viewingsRepository->getPropertyViewings($property);
+            $property['viewings'] = $viewings->filter(function ($viewing) {
+                return $viewing->status->status == 'ACTIVE';
+            })->map(function($viewing) {
+                unset($viewing->property);
+                return $viewing;
+            })->flatten();
+            
             $property['nextViewing'] = $nextViewing;
             $property['isFavourite'] = isset($isFavourites);
         }

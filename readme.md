@@ -4,4 +4,4 @@ This is the backend API used to power homecast-app. It was built using PHP Larav
 
 
 ## Set up
->```compose install```
+>```composer install```
